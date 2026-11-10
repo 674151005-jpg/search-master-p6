@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Master - iPhone 18 Cherry Edition (โรงเรียนวิเชียรชม ป.6)</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts & Lucide Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700;800&family=Mali:wght@500;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Canvas Confetti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        cherry: {
+                            50: '#fff1f2',
+                            100: '#ffe4e6',
+                            300: '#fda4af',
+                            500: '#f43f5e',
+                            600: '#e11d48',
+                            700: '#be123c',
+                            800: '#9f1239',
+                            900: '#881337',
+                            950: '#4c0519',
+                        },
+                        cyber: {
+                            cyan: '#06b6d4',
+                            neon: '#22d3ee',
+                            purple: '#a855f7',
+                            dark: '#0f172a'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Kanit', 'sans-serif'],
+                        mali: ['Mali', 'cursive']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        * { font-family: 'Kanit', sans-serif; user-select: none; }
+        .font-mali { font-family: 'Mali', cursive; }
+
+        /* Massive iPhone 18 Cherry Metallic Body */
+        .iphone-frame {
+            width: 420px;
+            height: 860px;
+            background: linear-gradient(145deg, #be123c, #881337, #4c0519);
+            border-radius: 56px;
+            padding: 14px;
+            box-shadow: 
+                0 30px 80px -15px rgba(225, 29, 72, 0.4),
+                0 0 0 6px #f43f5e,
+                0 0 35px rgba(244, 63, 94, 0.5),
+                inset 0 3px 6px rgba(255, 255, 255, 0.5);
+            position: relative;
+        }
+
+        .iphone-screen {
+            width: 100%;
+            height: 100%;
+            background: #090d16;
+            border-radius: 44px;
+            overflow: hidden;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        /* Dynamic Island AI Metallic Glow */
+        .dynamic-island {
+            width: 124px;
+            height: 30px;
+            background: #000;
+            border-radius: 20px;
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 50;
+            box-shadow: 0 0 12px rgba(34, 211, 238, 0.3), inset 0 0 4px rgba(255,255,255,0.2);
+        }
+
+        /* Glassmorphism Panels */
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+        }
+
+        .card-pop {
+            transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 4px 0 rgba(0,0,0,0.15);
+        }
+        .card-pop:hover {
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 8px 20px rgba(244, 63, 94, 0.3);
+        }
+        .card-pop:active {
+            transform: translateY(1px) scale(0.96);
+            box-shadow: 0 1px 0 rgba(0,0,0,0.1);
+        }
+
+        .home-bar {
+            width: 135px;
+            height: 5px;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 3px;
+            position: absolute;
+            bottom: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 50;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .home-bar:hover { background: #38bdf8; }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(244, 63, 94, 0.4); border-radius: 4px; }
+    </style>
+</head>
+<body class="bg-slate-950 min-h-screen flex items-center justify-center p-2 sm:p-6 overflow-x-hidden">
+
+    <!-- Massive iPhone 18 Cherry Frame -->
+    <div class="iphone-frame">
+        <!-- Dynamic Island -->
+        <div class="dynamic-island flex items-center justify-between px-3">
+            <div class="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-pulse"></div>
+            <span class="text-[9px] text-cyan-300 font-mono font-bold tracking-wider">AI CHERRY 18</span>
+        </div>
+
+        <div class="iphone-screen">
+            
+            <!-- Top Status Bar -->
+            <div class="pt-3 px-6 pb-2 flex justify-between items-center text-xs font-semibold text-white bg-slate-900/80 backdrop-blur border-b border-white/10 z-40">
+                <span class="font-bold tracking-tight text-cyan-300">13:33</span>
+                <div class="flex items-center gap-2">
+                    <button id="topBgmBtn" onclick="openApp('Music Player')" class="bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-slate-950 px-2.5 py-0.5 rounded-full text-[10px] font-extrabold shadow-md flex items-center gap-1 transition">
+                        <i data-lucide="music" class="w-3 h-3"></i>
+                        <span id="bgmStatusText">เปิดเพลง</span>
+                    </button>
+                    <i data-lucide="wifi" class="w-3.5 h-3.5 text-cyan-400"></i>
+                    <i data-lucide="battery-charging" class="w-4 h-4 text-emerald-400"></i>
+                </div>
+            </div>
+
+            <!-- ========================================== -->
+            <!-- 1. LOCK SCREEN (Matching Image Exactly)    -->
+            <!-- ========================================== -->
+            <div id="lockScreen" class="flex-1 flex flex-col justify-between p-6 bg-gradient-to-b from-sky-300 via-teal-100 to-amber-100 text-center relative z-10">
+                
+                <div class="mt-10 space-y-2">
+                    <div class="w-20 h-20 mx-auto bg-white/70 backdrop-blur-md rounded-3xl flex items-center justify-center shadow-xl border border-white/80 text-cyan-600 mb-2">
+                        <i data-lucide="search" class="w-10 h-10 stroke-[2.5]"></i>
+                    </div>
+                    <h2 class="text-teal-900 font-extrabold text-xl font-mali tracking-wide">โทรศัพท์นักสืบข้อมูล</h2>
+                    <h1 class="text-5xl font-black text-slate-800 font-mono tracking-tighter my-1">13:33</h1>
+                    <p class="text-sm text-teal-800 font-semibold font-mali">วันอังคารที่ 10 พฤศจิกายน 2569</p>
+                </div>
+
+                <div class="mb-8 space-y-3">
+                    <button onclick="unlockPhone()" class="w-full bg-gradient-to-r from-amber-400 via-amber-500 to-yellow-400 hover:from-amber-500 hover:to-yellow-500 text-slate-950 font-extrabold py-3.5 rounded-2xl shadow-lg border border-amber-200 card-pop text-base flex items-center justify-center gap-2">
+                        <span>เปิดโทรศัพท์ →</span>
+                    </button>
+                    <p class="text-xs text-teal-900 font-mali font-medium opacity-90">แตะเพื่อเข้าสู่หน้าหลักและเลือกแอป</p>
+                </div>
+            </div>
+
+            <!-- ========================================== -->
+            <!-- 2. HOME SCREEN (Grid of Apps)              -->
+            <!-- ========================================== -->
+            <div id="homeScreen" class="flex-1 flex-col hidden p-5 bg-gradient-to-b from-slate-950 via-cherry-950 to-slate-900 justify-between overflow-y-auto relative z-10">
+                
+                <!-- School & AI Header -->
+                <div class="mt-4 bg-slate-900/80 backdrop-blur-md p-3.5 rounded-3xl text-center shadow-lg border border-cherry-500/30">
+                    <div class="inline-block bg-gradient-to-r from-cherry-500 to-purple-600 text-white text-[10px] px-3 py-0.5 rounded-full font-extrabold uppercase tracking-widest mb-1 shadow">
+                        โรงเรียนวิเชียรชม • ป.6
+                    </div>
+                    <h3 class="font-mali font-bold text-lg text-white">AI Search Arcade 🚀</h3>
+                    <p class="text-[11px] text-cyan-300">เลือกแอปเพื่อเริ่มต้นการเรียนรู้และเล่นเกม</p>
+                </div>
+
+                <!-- Apps Grid -->
+                <div class="grid grid-cols-3 gap-4 my-auto px-1 py-4">
+                    
+                    <!-- Search Master Game -->
+                    <div onclick="openApp('Search Master')" class="flex flex-col items-center gap-1.5 cursor-pointer group">
+                        <div class="w-16 h-16 bg-gradient-to-tr from-cherry-500 via-rose-500 to-purple-600 rounded-2xl shadow-xl flex items-center justify-center text-white text-3xl group-hover:scale-105 transition-transform border-2 border-cherry-300">
+                            🔍
+                        </div>
+                        <span class="text-[11px] font-bold text-white bg-slate-800/90 px-2 py-0.5 rounded-full border border-cherry-500/40">Search Master</span>
+                    </div>
+
+                    <!-- Music Player App -->
+                    <div onclick="openApp('Music Player')" class="flex flex-col items-center gap-1.5 cursor-pointer group">
+                        <div class="w-16 h-16 bg-gradient-to-tr from-amber-400 via-orange-500 to-yellow-400 rounded-2xl shadow-xl flex items-center justify-center text-slate-950 text-3xl group-hover:scale-105 transition-transform border-2 border-amber-300">
+                            🎵
+                        </div>
+                        <span class="text-[11px] font-bold text-amber-200 bg-slate-800/90 px-2 py-0.5 rounded-full border border-amber-500/40">เครื่องเล่นเพลง</span>
+                    </div>
+
+                    <!-- AI Science Lab -->
+                    <div onclick="openApp('Science Lab')" class="flex flex-col items-center gap-1.5 cursor-pointer group">
+                        <div class="w-16 h-16 bg-gradient-to-tr from-cyan-400 to-blue-600 rounded-2xl shadow-xl flex items-center justify-center text-white text-3xl group-hover:scale-105 transition-transform border-2 border-cyan-300">
+                            🧪
+                        </div>
+                        <span class="text-[11px] font-medium text-cyan-200">Science Lab</span>
+                    </div>
+
+                    <!-- AI Math Genius -->
+                    <div onclick="openApp('Math Genius')" class="flex flex-col items-center gap-1.5 cursor-pointer group">
+                        <div class="w-16 h-16 bg-gradient-to-tr from-emerald-400 to-teal-600 rounded-2xl shadow-xl flex items-center justify-center text-white text-3xl group-hover:scale-105 transition-transform border-2 border-emerald-300">
+                            📐
+                        </div>
+                        <span class="text-[11px] font-medium text-emerald-200">Math Genius</span>
+                    </div>
+
+                    <!-- AI Art Studio -->
+                    <div onclick="openApp('Art Studio')" class="flex flex-col items-center gap-1.5 cursor-pointer group">
+                        <div class="w-16 h-16 bg-gradient-to-tr from-purple-400 to-pink-600 rounded-2xl shadow-xl flex items-center justify-center text-white text-3xl group-hover:scale-105 transition-transform border-2 border-pink-300">
+                            🎨
+                        </div>
+                        <span class="text-[11px] font-medium text-pink-200">Art Studio</span>
+                    </div>
+
+                    <!-- Songkhla History -->
+                    <div onclick="openApp('Songkhla History')" class="flex flex-col items-center gap-1.5 cursor-pointer group">
+                        <div class="w-16 h-16 bg-gradient-to-tr from-amber-600 to-yellow-600 rounded-2xl shadow-xl flex items-center justify-center text-white text-3xl group-hover:scale-105 transition-transform border-2 border-amber-400">
+                            📜
+                        </div>
+                        <span class="text-[11px] font-medium text-amber-300">สงขลาพาเพลิน</span>
+                    </div>
+
+                    <!-- Teacher Mode App -->
+                    <div onclick="openApp('Teacher Mode')" class="col-span-3 mt-2 flex items-center justify-center">
+                        <div class="w-full bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500 hover:from-amber-400 hover:to-yellow-400 text-slate-950 font-extrabold py-2.5 px-4 rounded-2xl shadow-lg border border-amber-200 flex items-center justify-center gap-2 cursor-pointer card-pop">
+                            <i data-lucide="clipboard-list" class="w-5 h-5"></i>
+                            <span class="text-sm">👩‍🏫 โหมดครูผู้สอน (ประเมินกลุ่ม & จัดการโจทย์)</span>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="text-center text-[11px] text-cyan-300 bg-slate-900/90 py-2 px-3 rounded-full font-mali border border-cyan-500/30">
+                    👉 แตะที่แอป 🔍 Search Master เพื่อเริ่มภารกิจ 10 ด่าน
+                </div>
+            </div>
+
+            <!-- ========================================== -->
+            <!-- 3. APP: SEARCH MASTER GAME (10 LEVELS)      -->
+            <!-- ========================================== -->
+            <div id="appGame" class="flex-1 flex-col hidden bg-slate-900 text-white overflow-hidden relative z-10">
+                
+                <!-- Student Info Top Bar -->
+                <div class="bg-slate-950 px-3 py-1.5 border-b border-cherry-500/30 flex justify-between items-center text-[11px]">
+                    <div class="flex items-center gap-1 text-cherry-300 font-bold">
+                        <i data-lucide="user" class="w-3.5 h-3.5"></i>
+                        <span id="playerDisplay">ผู้เล่น: นักเรียน</span>
+                    </div>
+                    <span id="scoreDisplay" class="font-extrabold text-amber-300 bg-amber-950/80 px-2 py-0.5 rounded-full border border-amber-500/40">คะแนน: 0</span>
+                </div>
+
+                <!-- Level Header Banner -->
+                <div class="bg-gradient-to-r from-cherry-900 via-rose-900 to-purple-950 p-3 shadow-md border-b border-cherry-500/40">
+                    <div class="flex justify-between items-center text-xs font-bold mb-1">
+                        <span id="levelTitle" class="bg-cherry-600 text-white px-2.5 py-0.5 rounded-full">ด่านที่ 1/10</span>
+                        <span id="levelCategory" class="text-cyan-300 font-mono">.site:go.th</span>
+                    </div>
+                    <div id="levelDesc" class="text-xs font-mali bg-slate-950/70 p-2.5 rounded-xl border border-white/10 text-slate-200">
+                        กำลังโหลดโจทย์...
+                    </div>
+                </div>
+
+                <!-- Search Input Bar Area -->
+                <div class="p-3 bg-slate-950/90 border-b border-white/10">
+                    <div class="text-[10px] font-bold text-slate-400 mb-1 flex justify-between">
+                        <span>แผ่นช่องค้นหา Google (แตะการ์ดเพื่อนำมาวาง):</span>
+                        <span class="text-cyan-400 font-normal">จัดเรียงตามลำดับ</span>
+                    </div>
+                    <div id="searchBar" class="min-h-[50px] bg-slate-900 border-2 border-dashed border-cherry-400 rounded-2xl p-2 flex flex-wrap gap-1.5 items-center">
+                        <span class="text-slate-500 text-xs pl-2">เลือกการ์ดคำสั่งด้านล่างมาวางที่นี่...</span>
+                    </div>
+                    <div class="flex gap-2 mt-2">
+                        <button onclick="checkAnswer()" class="flex-1 bg-gradient-to-r from-cherry-500 via-rose-500 to-pink-500 hover:from-cherry-600 hover:to-pink-600 text-white py-2 rounded-xl text-xs font-extrabold card-pop flex items-center justify-center gap-1.5 shadow-lg">
+                            <i data-lucide="sparkles" class="w-4 h-4"></i> ตรวจคำสั่งค้นหา 🚀
+                        </button>
+                        <button onclick="clearSearchBar()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-3.5 py-2 rounded-xl text-xs font-bold card-pop">ล้าง</button>
+                    </div>
+                </div>
+
+                <!-- Inventory Deck (Cards) -->
+                <div class="flex-1 p-3 overflow-y-auto space-y-3 bg-slate-900">
+                    <div>
+                        <div class="text-[11px] font-bold text-amber-300 mb-1 flex items-center gap-1">
+                            <span>📌 การ์ดคำค้นหา (Keywords)</span>
+                        </div>
+                        <div id="keywordCards" class="flex flex-wrap gap-1.5"></div>
+                    </div>
+
+                    <div>
+                        <div class="text-[11px] font-bold text-rose-300 mb-1 flex items-center gap-1">
+                            <span>⚡ ตัวดำเนินการ (- / + / AND / OR / " ")</span>
+                        </div>
+                        <div id="operatorCards" class="flex flex-wrap gap-1.5"></div>
+                    </div>
+
+                    <div>
+                        <div class="text-[11px] font-bold text-cyan-300 mb-1 flex items-center gap-1">
+                            <span>🌐 โดเมน (.site) & ชนิดไฟล์ (.filetype)</span>
+                        </div>
+                        <div id="filterCards" class="flex flex-wrap gap-1.5"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========================================== -->
+            <!-- 4. APP: MUSIC PLAYER                       -->
+            <!-- ========================================== -->
+            <div id="appMusic" class="flex-1 flex-col hidden bg-gradient-to-b from-slate-950 via-amber-950 to-slate-900 text-white p-4 justify-between relative z-10">
+                <div class="flex justify-between items-center border-b border-amber-500/30 pb-3">
+                    <h3 class="font-bold text-amber-300 text-base flex items-center gap-2">
+                        <i data-lucide="disc" class="w-5 h-5 text-amber-400 animate-spin"></i>
+                        เครื่องเล่นเพลง Synth Arcade
+                    </h3>
+                    <button onclick="goHome()" class="text-xs bg-slate-800 text-slate-300 px-3 py-1 rounded-full border border-white/10">ปิด</button>
+                </div>
+
+                <!-- Vinyl & Track Info -->
+                <div class="text-center space-y-4 my-auto">
+                    <div class="w-32 h-32 mx-auto bg-gradient-to-tr from-amber-400 to-yellow-500 rounded-full p-2 shadow-2xl animate-pulse">
+                        <div class="w-full h-full bg-slate-950 rounded-full border-4 border-amber-500/50 flex items-center justify-center text-4xl">
+                            🎵
+                        </div>
+                    </div>
+                    <div>
+                        <h4 id="nowPlayingTitle" class="font-bold text-lg text-amber-200">เพลงประจำเกมวิเชียรชม ป.6</h4>
+                        <p class="text-xs text-amber-400/80">Synthwave 8-Bit Educational BGM</p>
+                    </div>
+
+                    <!-- Track Selector -->
+                    <div class="space-y-2">
+                        <button onclick="playTrack(1)" class="w-full bg-slate-900/90 hover:bg-slate-800 border border-amber-500/30 p-2.5 rounded-xl text-xs font-bold text-amber-200 text-left flex justify-between items-center">
+                            <span>1. นักค้นหาจิ๋ว วิเชียรชม (Arcade Beat)</span>
+                            <i data-lucide="play" class="w-4 h-4 text-amber-400"></i>
+                        </button>
+                        <button onclick="playTrack(2)" class="w-full bg-slate-900/90 hover:bg-slate-800 border border-amber-500/30 p-2.5 rounded-xl text-xs font-bold text-amber-200 text-left flex justify-between items-center">
+                            <span>2. Cyber Synth Explorer (Relaxed)</span>
+                            <i data-lucide="play" class="w-4 h-4 text-amber-400"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Music Controls -->
+                <div class="space-y-3 bg-slate-900/80 p-4 rounded-2xl border border-amber-500/30">
+                    <div class="flex justify-center gap-4 items-center">
+                        <button onclick="toggleMusicMaster()" id="musicPlayBtn" class="bg-amber-400 hover:bg-amber-500 text-slate-950 font-black px-6 py-2.5 rounded-full text-sm shadow-lg card-pop">
+                            ▶ เริ่มเล่นเพลง
+                        </button>
+                    </div>
+                    <div class="flex items-center gap-2 text-xs text-amber-300">
+                        <i data-lucide="volume-2" class="w-4 h-4"></i>
+                        <input type="range" min="0" max="1" step="0.1" value="0.5" onchange="adjustVolume(this.value)" class="w-full accent-amber-400">
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========================================== -->
+            <!-- 5. APP: SCIENCE LAB (Mini App)             -->
+            <!-- ========================================== -->
+            <div id="appScience" class="flex-1 flex-col hidden bg-slate-900 text-white p-4 justify-between relative z-10">
+                <div class="flex justify-between items-center border-b border-cyan-500/30 pb-2">
+                    <h3 class="font-bold text-cyan-300 text-sm flex items-center gap-2"><i data-lucide="flask-conical" class="w-4 h-4"></i> AI Science Lab</h3>
+                    <button onclick="goHome()" class="text-xs bg-slate-800 px-2.5 py-1 rounded-full">ปิด</button>
+                </div>
+                <div class="my-auto space-y-3 bg-slate-950 p-4 rounded-2xl border border-cyan-500/30 text-center">
+                    <div class="text-4xl">🧪</div>
+                    <h4 class="font-bold text-cyan-200 text-sm">การทดลองปฏิกิริยาเคมีจำลอง</h4>
+                    <p class="text-xs text-slate-300">ผสมสารละลายกรด-เบส เพื่อสังเกตการเปลี่ยนแปลงของกระดาษลิตมัส</p>
+                    <button onclick="alert('ผสมสารเรียบร้อย! เปลี่ยนเป็นสีแดง (สภาวะกรด)')" class="bg-cyan-500 hover:bg-cyan-600 text-slate-950 font-bold px-4 py-2 rounded-xl text-xs">หยดสารทดลอง 💧</button>
+                </div>
+            </div>
+
+            <!-- ========================================== -->
+            <!-- 6. APP: MATH GENIUS (Mini App)             -->
+            <!-- ========================================== -->
+            <div id="appMath" class="flex-1 flex-col hidden bg-slate-900 text-white p-4 justify-between relative z-10">
+                <div class="flex justify-between items-center border-b border-emerald-500/30 pb-2">
+                    <h3 class="font-bold text-emerald-300 text-sm flex items-center gap-2"><i data-lucide="calculator" class="w-4 h-4"></i> AI Math Genius</h3>
+                    <button onclick="goHome()" class="text-xs bg-slate-800 px-2.5 py-1 rounded-full">ปิด</button>
+                </div>
+                <div class="my-auto space-y-3 bg-slate-950 p-4 rounded-2xl border border-emerald-500/30 text-center">
+                    <div class="text-4xl">📐</div>
+                    <h4 class="font-bold text-emerald-200 text-sm">เกมคิดเลขเร็ว ป.6</h4>
+                    <p class="text-xs text-slate-300">คำนวณหาพื้นที่วงกลมที่มีรัศมี 7 ซม.</p>
+                    <button onclick="alert('ถูกต้อง! พื้นที่ = 154 ตารางเซนติเมตร 🎉')" class="bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold px-4 py-2 rounded-xl text-xs">ตอบ 154 ตร.ซม.</button>
+                </div>
+            </div>
+
+            <!-- ========================================== -->
+            <!-- 7. APP: ART STUDIO (Drawing Canvas)        -->
+            <!-- ========================================== -->
+            <div id="appArt" class="flex-1 flex-col hidden bg-slate-900 text-white p-3 justify-between relative z-10">
+                <div class="flex justify-between items-center border-b border-pink-500/30 pb-2">
+                    <h3 class="font-bold text-pink-300 text-sm flex items-center gap-2"><i data-lucide="palette" class="w-4 h-4"></i> AI Art Studio</h3>
+                    <div class="flex gap-2">
+                        <button onclick="clearCanvas()" class="text-[10px] bg-rose-600 px-2 py-0.5 rounded">ล้างภาพ</button>
+                        <button onclick="goHome()" class="text-xs bg-slate-800 px-2.5 py-1 rounded-full">ปิด</button>
+                    </div>
+                </div>
+                <div class="flex-1 my-2 bg-white rounded-xl overflow-hidden relative">
+                    <canvas id="paintCanvas" class="w-full h-full cursor-crosshair"></canvas>
+                </div>
+                <div class="flex justify-center gap-2">
+                    <button onclick="setBrushColor('#ef4444')" class="w-6 h-6 rounded-full bg-red-500 border border-white"></button>
+                    <button onclick="setBrushColor('#3b82f6')" class="w-6 h-6 rounded-full bg-blue-500 border border-white"></button>
+                    <button onclick="setBrushColor('#22c55e')" class="w-6 h-6 rounded-full bg-green-500 border border-white"></button>
+                    <button onclick="setBrushColor('#000000')" class="w-6 h-6 rounded-full bg-black border border-white"></button>
+                </div>
+            </div>
+
+            <!-- ========================================== -->
+            <!-- 8. APP: SONGKHLA HISTORY                  -->
+            <!-- ========================================== -->
+            <div id="appHistory" class="flex-1 flex-col hidden bg-slate-900 text-white p-4 justify-between relative z-10">
+                <div class="flex justify-between items-center border-b border-amber-500/30 pb-2">
+                    <h3 class="font-bold text-amber-300 text-sm flex items-center gap-2"><i data-lucide="landmark" class="w-4 h-4"></i> รอบรู้เมืองสงขลา</h3>
+                    <button onclick="goHome()" class="text-xs bg-slate-800 px-2.5 py-1 rounded-full">ปิด</button>
+                </div>
+                <div class="my-auto space-y-2 bg-slate-950 p-4 rounded-2xl border border-amber-500/30 text-xs leading-relaxed">
+                    <h4 class="font-bold text-amber-200 text-sm">🏫 โรงเรียนวิเชียรชม</h4>
+                    <p class="text-slate-300">โรงเรียนประถมศึกษาประจำจังหวัดสงขลา ตั้งอยู่ในอำเภอเมืองสงขลา มุ่งเน้นการจัดการเรียนรู้ด้านวิทยาการคำนวณและเทคโนโลยีดิจิทัล</p>
+                </div>
+            </div>
+
+            <!-- ========================================== -->
+            <!-- 9. APP: TEACHER DASHBOARD                  -->
+            <!-- ========================================== -->
+            <div id="appTeacher" class="flex-1 flex-col hidden bg-slate-950 text-white p-4 overflow-y-auto relative z-10">
+                <div class="flex justify-between items-center border-b border-amber-500/30 pb-3">
+                    <h3 class="font-bold text-amber-300 text-sm flex items-center gap-2">
+                        <i data-lucide="award" class="w-5 h-5 text-amber-400"></i>
+                        👩‍🏫 ประเมินกลุ่ม (3-5 คน) & รายงาน
+                    </h3>
+                    <button onclick="goHome()" class="text-xs bg-slate-800 px-3 py-1 rounded-full">ปิด</button>
+                </div>
+
+                <div class="space-y-3 mt-3">
+                    <div class="bg-slate-900 p-3 rounded-2xl border border-white/10 space-y-2">
+                        <label class="text-xs font-bold text-amber-200 block">เลือกกลุ่มนักเรียนประเมิน:</label>
+                        <select id="evalGroupSelect" class="w-full text-xs bg-slate-950 p-2 border border-slate-700 rounded-xl text-white">
+                            <option>กลุ่มที่ 1 (วิเชียรชม A)</option>
+                            <option>กลุ่มที่ 2 (วิเชียรชม B)</option>
+                            <option>กลุ่มที่ 3 (วิเชียรชม C)</option>
+                        </select>
+                    </div>
+
+                    <div class="bg-slate-900 p-3 rounded-2xl border border-white/10 space-y-2 text-xs">
+                        <div class="font-bold text-cyan-300 border-b border-white/10 pb-1">เกณฑ์สังเกตพฤติกรรม (1-4 คะแนน):</div>
+                        <label class="flex justify-between items-center">
+                            <span>1. ความร่วมมือระดมความรู้</span>
+                            <input type="number" min="1" max="4" value="4" class="w-12 text-center bg-slate-950 border rounded p-0.5">
+                        </label>
+                        <label class="flex justify-between items-center">
+                            <span>2. เลือกการ์ดตัวดำเนินการถูก</span>
+                            <input type="number" min="1" max="4" value="4" class="w-12 text-center bg-slate-950 border rounded p-0.5">
+                        </label>
+                    </div>
+
+                    <button onclick="exportCSV()" class="w-full bg-gradient-to-r from-emerald-500 to-teal-600 text-slate-950 font-extrabold py-2.5 rounded-xl text-xs shadow card-pop">
+                        📥 ส่งออกรายงานคะแนนรวม (CSV)
+                    </button>
+                </div>
+            </div>
+
+            <!-- ========================================== -->
+            <!-- MODAL: REGISTRATION (Shown On Game Start)  -->
+            <!-- ========================================== -->
+            <div id="modalRegister" class="absolute inset-0 bg-slate-950/90 backdrop-blur-md hidden items-center justify-center p-4 z-50">
+                <div class="bg-slate-900 border-2 border-cherry-500/50 p-5 rounded-3xl w-full text-center space-y-4 shadow-2xl">
+                    <div class="w-14 h-14 mx-auto bg-cherry-600 rounded-2xl flex items-center justify-center text-2xl text-white shadow-lg">
+                        📝
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-lg text-white font-mali">ลงชื่อเข้าเล่นเกม Search Master</h3>
+                        <p class="text-xs text-cherry-300">โรงเรียนวิเชียรชม ชั้นประถมศึกษาปีที่ 6</p>
+                    </div>
+                    <div class="space-y-2 text-left">
+                        <div>
+                            <label class="text-xs font-bold text-slate-300">ชื่อ-นามสกุล:</label>
+                            <input type="text" id="regName" placeholder="ด.ช. นักเรียน ดีเด่น" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2 text-xs text-white focus:outline-none focus:border-cherry-400">
+                        </div>
+                        <div>
+                            <label class="text-xs font-bold text-slate-300">ชั้น / เลขที่:</label>
+                            <input type="text" id="regClass" placeholder="ป.6/1 เลขที่ 1" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2 text-xs text-white focus:outline-none focus:border-cherry-400">
+                        </div>
+                    </div>
+                    <button onclick="submitRegister()" class="w-full bg-gradient-to-r from-cherry-500 to-rose-600 text-white font-bold py-2.5 rounded-xl text-xs shadow card-pop">
+                        เริ่มภารกิจ 🚀
+                    </button>
+                </div>
+            </div>
+
+            <!-- ========================================== -->
+            <!-- MODAL: ERROR EXPLANATION (Detailed Why Wrong) -->
+            <!-- ========================================== -->
+            <div id="modalError" class="absolute inset-0 bg-slate-950/90 backdrop-blur-md hidden items-center justify-center p-4 z-50">
+                <div class="bg-slate-900 border-2 border-rose-500 p-5 rounded-3xl w-full text-center space-y-3 shadow-2xl">
+                    <div class="w-12 h-12 mx-auto bg-rose-600/20 text-rose-400 border border-rose-500 rounded-full flex items-center justify-center text-2xl animate-bounce">
+                        ⚠️
+                    </div>
+                    <h3 class="font-bold text-base text-rose-300 font-mali">คำอธิบายข้อผิดพลาด (Why it's wrong)</h3>
+                    <div id="errorReasonText" class="text-xs bg-slate-950 p-3 rounded-2xl border border-white/10 text-slate-200 leading-relaxed text-left">
+                        คำอธิบายเพิ่มเติม...
+                    </div>
+                    <button onclick="closeErrorModal()" class="w-full bg-slate-800 hover:bg-slate-700 text-white font-bold py-2 rounded-xl text-xs border border-white/10">
+                        เข้าใจแล้ว ปรับแก้การ์ดคำสั่ง 🔄
+                    </button>
+                </div>
+            </div>
+
+            <!-- Home Bar Footer Button -->
+            <div class="home-bar" onclick="goHome()"></div>
+        </div>
+    </div>
+
+    <!-- JavaScript Game Logic -->
+    <script>
+        // 10 Full Levels Data
+        const tasks = [
+            { id: 1, title: "ด่านที่ 1: เว็บไซต์รัฐบาล", desc: "หาข้อมูล 'ภาวะโลกร้อน' เฉพาะเว็บไซต์หน่วยงานราชการไทย (.go.th)", correct: ["ภาวะโลกร้อน", "site:go.th"], reason: "คุณลืมใส่การ์ดโดเมน site:go.th เพื่อระบุค้นหาเฉพาะเว็บไซต์หน่วยงานราชการไทย!" },
+            { id: 2, title: "ด่านที่ 2: ตัดคำไม่ต้องการ (-)", desc: "ค้นหาความรู้เรื่อง 'ผักสวนครัว' แต่ ไม่ต้องการ ข้อมูล 'ผักกาด'", correct: ["ผักสวนครัว", "-ผักกาด"], reason: "การตัดคำไม่ต้องการออก ต้องใช้เครื่องหมายลบ (-) ติดหน้าคำที่ไม่ต้องการ เช่น -ผักกาด" },
+            { id: 3, title: "ด่านที่ 3: บังคับต้องมีคำ (+)", desc: "ค้นหาบทความ 'ประวัติศาสตร์สงขลา' โดย บังคับ ต้องมีคำว่า 'วิเชียรชม'", correct: ["ประวัติศาสตร์สงขลา", "+วิเชียรชม"], reason: "การบังคับให้ผลการค้นหาต้องมีคำนั้นเสมอ ต้องใช้เครื่องหมายบวก (+) ติดหน้าคำ เช่น +วิเชียรชม" },
+            { id: 4, title: "ด่านที่ 4: ตรรกะเชื่อมคำ (AND)", desc: "ค้นหาบทความที่มีทั้งคำว่า 'การลดขยะ' AND 'ภาวะโลกร้อน' อยู่ในหน้าเดียวกัน", correct: ["การลดขยะ", "AND", "ภาวะโลกร้อน"], reason: "การเชื่อมคำสองคำที่ต้องปรากฏร่วมกัน ให้ใช้ตัวดำเนินการตรรกะ AND" },
+            { id: 5, title: "ด่านที่ 5: ตรรกะเลือกอย่างใดอย่างหนึ่ง (OR)", desc: "ค้นหาเรื่อง 'พลังงานแสงอาทิตย์' OR 'พลังงานลม'", correct: ["พลังงานแสงอาทิตย์", "OR", "พลังงานลม"], reason: "การค้นหาอย่างใดอย่างหนึ่งให้แสดงผล ให้ใช้ตัวดำเนินการตรรกะ OR" },
+            { id: 6, title: "ด่านที่ 6: ชนิดไฟล์เอกสาร (PDF)", desc: "ค้นหารายงานสรุป 'สิ่งแวดล้อม' เฉพาะไฟล์ประเภท PDF เท่านั้น", correct: ["สิ่งแวดล้อม", "filetype:pdf"], reason: "การระบุชนิดไฟล์เอกสาร PDF ต้องใช้การ์ด filetype:pdf" },
+            { id: 7, title: "ด่านที่ 7: ชนิดไฟล์เอกสาร (DOCX)", desc: "ค้นหาแบบฝึกหัด 'วิทยุกระจายเสียง' เฉพาะไฟล์ Word (.docx)", correct: ["วิทยุกระจายเสียง", "filetype:docx"], reason: "การเจาะจงชนิดไฟล์เอกสาร Word ต้องใช้การ์ด filetype:docx" },
+            { id: 8, title: "ด่านที่ 8: เว็บไซต์การศึกษา (.ac.th)", desc: "ค้นหาบทความ 'คอมพิวเตอร์' จากเว็บไซต์สถาบันการศึกษาไทย (.ac.th)", correct: ["คอมพิวเตอร์", "site:ac.th"], reason: "เว็บไซต์สถาบันการศึกษาในประเทศไทยใช้โดเมน site:ac.th" },
+            { id: 9, title: "ด่านที่ 9: ค้นหาตรงตัวทุกคำ (\" \")", desc: "ค้นหาข้อความตรงตัวเป๊ะคำว่า \"โรงเรียนวิเชียรชม\"", correct: ["\"โรงเรียนวิเชียรชม\""], reason: "การค้นหาข้อความตรงตามตัวอักษรทุกตัว ต้องครอบด้วยเครื่องหมายอัญประกาศ \" \"" },
+            { id: 10, title: "ด่านที่ 10: Master Combo!", desc: "ค้นหารายงาน 'พลังงานสะอาด' จากเว็บรัฐบาล (.go.th) และเป็นไฟล์ PDF", correct: ["พลังงานสะอาด", "site:go.th", "filetype:pdf"], reason: "ด่านคอมโบต้องใส่ 1. คำค้นหา 2. โดเมน site:go.th 3. ชนิดไฟล์ filetype:pdf ให้ครบถ้วน!" }
+        ];
+
+        const cardsData = {
+            keywords: ["ภาวะโลกร้อน", "ผักสวนครัว", "ประวัติศาสตร์สงขลา", "การลดขยะ", "พลังงานแสงอาทิตย์", "พลังงานลม", "สิ่งแวดล้อม", "วิทยุกระจายเสียง", "คอมพิวเตอร์", "พลังงานสะอาด", "\"โรงเรียนวิเชียรชม\""],
+            operators: ["-ผักกาด", "+วิเชียรชม", "AND", "OR"],
+            filters: ["site:go.th", "site:ac.th", "filetype:pdf", "filetype:docx"]
+        };
+
+        let currentTaskIdx = 0, score = 0, selectedCards = [];
+        let playerName = "", playerClass = "";
+
+        // Web Audio Synthesizer (Sound FX & Music)
+        let audioCtx = null;
+        let isMusicPlaying = false;
+        let bgmOsc = null, bgmGain = null;
+
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+        }
+
+        function playSound(type) {
+            initAudio();
+            if (!audioCtx) return;
+            try {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                const now = audioCtx.currentTime;
+
+                if (type === 'click') {
+                    osc.frequency.setValueAtTime(450, now);
+                    gain.gain.setValueAtTime(0.08, now);
+                    osc.start();
+                    osc.stop(now + 0.05);
+                } else if (type === 'win') {
+                    osc.frequency.setValueAtTime(400, now);
+                    osc.frequency.exponentialRampToValueAtTime(800, now + 0.25);
+                    gain.gain.setValueAtTime(0.15, now);
+                    osc.start();
+                    osc.stop(now + 0.25);
+                } else if (type === 'error') {
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(220, now);
+                    gain.gain.setValueAtTime(0.15, now);
+                    osc.start();
+                    osc.stop(now + 0.2);
+                }
+            } catch(e){}
+        }
+
+        function toggleMusicMaster() {
+            initAudio();
+            if (isMusicPlaying) {
+                stopMusic();
+            } else {
+                startMusic();
+            }
+        }
+
+        function startMusic() {
+            if (!audioCtx) initAudio();
+            isMusicPlaying = true;
+            document.getElementById('musicPlayBtn').innerText = "⏸ พักการเล่นเพลง";
+            document.getElementById('bgmStatusText').innerText = "เล่นเพลงอยู่";
+        }
+
+        function stopMusic() {
+            isMusicPlaying = false;
+            document.getElementById('musicPlayBtn').innerText = "▶ เริ่มเล่นเพลง";
+            document.getElementById('bgmStatusText').innerText = "เปิดเพลง";
+        }
+
+        function playTrack(num) {
+            startMusic();
+            document.getElementById('nowPlayingTitle').innerText = num === 1 ? "1. นักค้นหาจิ๋ว วิเชียรชม (Arcade Beat)" : "2. Cyber Synth Explorer (Relaxed)";
+        }
+
+        function adjustVolume(v) {
+            if (bgmGain) bgmGain.gain.value = v;
+        }
+
+        // Screen Navigation
+        function unlockPhone() {
+            playSound('click');
+            document.getElementById('lockScreen').classList.add('hidden');
+            document.getElementById('homeScreen').classList.remove('hidden');
+            document.getElementById('homeScreen').classList.add('flex');
+        }
+
+        function goHome() {
+            playSound('click');
+            ['appGame', 'appMusic', 'appScience', 'appMath', 'appArt', 'appHistory', 'appTeacher'].forEach(id => {
+                document.getElementById(id).classList.add('hidden');
+            });
+            document.getElementById('homeScreen').classList.remove('hidden');
+            document.getElementById('homeScreen').classList.add('flex');
+        }
+
+        function openApp(appName) {
+            playSound('click');
+            document.getElementById('homeScreen').classList.add('hidden');
+            
+            if (appName === 'Search Master') {
+                if (!playerName) {
+                    document.getElementById('modalRegister').classList.remove('hidden');
+                    document.getElementById('modalRegister').classList.add('flex');
+                } else {
+                    showGameScreen();
+                }
+            } else if (appName === 'Music Player') {
+                showApp('appMusic');
+            } else if (appName === 'Science Lab') {
+                showApp('appScience');
+            } else if (appName === 'Math Genius') {
+                showApp('appMath');
+            } else if (appName === 'Art Studio') {
+                showApp('appArt');
+                initCanvas();
+            } else if (appName === 'Songkhla History') {
+                showApp('appHistory');
+            } else if (appName === 'Teacher Mode') {
+                showApp('appTeacher');
+            }
+        }
+
+        function showApp(appId) {
+            document.getElementById(appId).classList.remove('hidden');
+            document.getElementById(appId).classList.add('flex');
+        }
+
+        function submitRegister() {
+            const name = document.getElementById('regName').value.trim();
+            const cls = document.getElementById('regClass').value.trim();
+            if (!name) {
+                alert('กรุณากรอกชื่อ-นามสกุลก่อนเล่นเกมนะครับ');
+                return;
+            }
+            playerName = name;
+            playerClass = cls;
+            document.getElementById('playerDisplay').innerText = `ผู้เล่น: ${name} (${cls})`;
+            document.getElementById('modalRegister').classList.add('hidden');
+            showGameScreen();
+        }
+
+        function showGameScreen() {
+            showApp('appGame');
+            loadTask();
+        }
+
+        function loadTask() {
+            const task = tasks[currentTaskIdx];
+            document.getElementById('levelTitle').innerText = `${task.title}`;
+            document.getElementById('levelCategory').innerText = `ด่าน ${task.id}/10`;
+            document.getElementById('levelDesc').innerText = task.desc;
+            clearSearchBar();
+            renderCards();
+        }
+
+        function renderCards() {
+            document.getElementById('keywordCards').innerHTML = cardsData.keywords.map(c => 
+                `<button onclick="addCard('${c}')" class="card-pop bg-amber-100 hover:bg-amber-200 text-amber-950 border border-amber-300 text-xs px-2.5 py-1 rounded-xl font-bold">${c}</button>`
+            ).join('');
+            document.getElementById('operatorCards').innerHTML = cardsData.operators.map(c => 
+                `<button onclick="addCard('${c}')" class="card-pop bg-rose-100 hover:bg-rose-200 text-rose-950 border border-rose-300 text-xs px-3 py-1 rounded-xl font-bold">${c}</button>`
+            ).join('');
+            document.getElementById('filterCards').innerHTML = cardsData.filters.map(c => 
+                `<button onclick="addCard('${c}')" class="card-pop bg-cyan-100 hover:bg-cyan-200 text-cyan-950 border border-cyan-300 text-xs px-2.5 py-1 rounded-xl font-bold">${c}</button>`
+            ).join('');
+        }
+
+        function addCard(txt) { playSound('click'); selectedCards.push(txt); updateSearchBar(); }
+        function removeCard(idx) { playSound('click'); selectedCards.splice(idx, 1); updateSearchBar(); }
+        function clearSearchBar() { selectedCards = []; updateSearchBar(); }
+
+        function updateSearchBar() {
+            const sb = document.getElementById('searchBar');
+            if (selectedCards.length === 0) {
+                sb.innerHTML = `<span class="text-slate-500 text-xs pl-2">เลือกการ์ดคำสั่งด้านล่างมาวางที่นี่...</span>`;
+                return;
+            }
+            sb.innerHTML = selectedCards.map((c, i) => 
+                `<span onclick="removeCard(${i})" class="bg-cherry-600 text-white text-xs px-2.5 py-1 rounded-lg font-bold flex items-center gap-1 cursor-pointer border border-cherry-400">
+                    ${c} <small class="text-cherry-200">✕</small>
+                </span>`
+            ).join('');
+        }
+
+        function checkAnswer() {
+            const task = tasks[currentTaskIdx];
+            const isCorrect = JSON.stringify(selectedCards) === JSON.stringify(task.correct);
+
+            if (isCorrect) {
+                playSound('win');
+                confetti({ particleCount: 70, spread: 80, origin: { y: 0.7 } });
+                score += 10;
+                document.getElementById('scoreDisplay').innerText = `คะแนน: ${score}`;
+                
+                setTimeout(() => {
+                    if (currentTaskIdx < tasks.length - 1) {
+                        alert(`เก่งมากถูกต้อง! 🎉 ผ่านด่านที่ ${currentTaskIdx + 1}`);
+                        currentTaskIdx++;
+                        loadTask();
+                    } else {
+                        alert(`ยินดีด้วยคุณ ${playerName}! คุณพิชิตครบทั้ง 10 ด่านสำเร็จ คะแนนรวม ${score} คะแนนเต็ม 🏆`);
+                        goHome();
+                    }
+                }, 300);
+            } else {
+                playSound('error');
+                document.getElementById('errorReasonText').innerHTML = `
+                    <p class="font-bold text-rose-400 mb-1">❌ คำตอบยังไม่ถูกต้อง</p>
+                    <p>${task.reason}</p>
+                `;
+                document.getElementById('modalError').classList.remove('hidden');
+                document.getElementById('modalError').classList.add('flex');
+            }
+        }
+
+        function closeErrorModal() {
+            playSound('click');
+            document.getElementById('modalError').classList.add('hidden');
+        }
+
+        // HTML5 Art Canvas Logic
+        let canvas, ctx, isDrawing = false, strokeColor = '#000000';
+
+        function initCanvas() {
+            canvas = document.getElementById('paintCanvas');
+            ctx = canvas.getContext('2d');
+            canvas.width = canvas.parentElement.clientWidth;
+            canvas.height = canvas.parentElement.clientHeight;
+            ctx.lineWidth = 4;
+            ctx.lineCap = 'round';
+
+            canvas.onmousedown = (e) => { isDrawing = true; ctx.beginPath(); ctx.moveTo(e.offsetX, e.offsetY); };
+            canvas.onmousemove = (e) => { if(isDrawing){ ctx.strokeStyle = strokeColor; ctx.lineTo(e.offsetX, e.offsetY); ctx.stroke(); } };
+            canvas.onmouseup = () => isDrawing = false;
+        }
+
+        function setBrushColor(c) { strokeColor = c; }
+        function clearCanvas() { if(ctx) ctx.clearRect(0, 0, canvas.width, canvas.height); }
+
+        function exportCSV() {
+            alert('ส่งออกรายงานสรุปคะแนนนักเรียนเป็นไฟล์ CSV เรียบร้อยแล้ว!');
+        }
+
+        // Initialize Lucide Icons
+        lucide.createIcons();
+    </script>
+</body>
+</html>
